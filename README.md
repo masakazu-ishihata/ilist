@@ -74,7 +74,7 @@ _l からは取り除かれない。
 
 
 
-## succ
+### succ
 
     void *ilist_succ(ilist *_l);
 
