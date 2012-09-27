@@ -29,12 +29,18 @@ typedef struct ILIST
   iinnerlist *head;
   iinnerlist *tail;
 } ilist;
+
 /* new/free */
 ilist *ilist_new(void);
 void ilist_free(ilist *_l);
 void ilist_free_func(ilist *_l, void (*free_func)(void *));
+
 /* shift/unshift */
 void *ilist_shift(ilist *_l);
 size_t ilist_unshift(ilist *_l, void *_item);
+
+/* push/pop */
+void *ilist_pop(ilist *_l);
+size_t ilist_push(ilist *_l, void *_item);
 
 #endif /* _INCLUDE_ILIST_H_ */

@@ -31,6 +31,7 @@ void iinnerlist_free(iinnerlist *_l)
 /*----------------------------------------------------------------------------*/
 /* list */
 /*----------------------------------------------------------------------------*/
+/* new/free */
 ilist *ilist_new(void)
 {
   ilist *l;
@@ -79,6 +80,7 @@ void ilist_free_func(ilist *_l, void (*free_func)(void *))
     free(_l);
   }
 }
+
 /* shift/unshift */
 void *ilist_shift(ilist *_l)
 {
@@ -110,9 +112,7 @@ void *ilist_shift(ilist *_l)
 }
 size_t ilist_unshift(ilist *_l, void *_item)
 {
-  iinnerlist *il;
-
-  il = iinnerlist_new();
+  iinnerlist *il = iinnerlist_new();
   il->item = _item;
 
   /* empty */
@@ -129,3 +129,54 @@ size_t ilist_unshift(ilist *_l, void *_item)
 
   return ++(_l->size);
 }
+
+/* push/pop */
+void *ilist_pop(ilist *_l)
+{
+  void *item;
+  iinnerlist *il;
+
+  /* empty */
+  if(_l->size == 0) return NULL;
+
+  /* pop tail */
+  il = _l->tail;
+
+  item = il->item;
+  il->item = NULL;
+
+  _l->tail = il->prev;
+  il->prev = NULL;
+
+  if(_l->tail != NULL) (_l->tail)->next = NULL;
+  il->next = NULL;
+
+  iinnerlist_free(il);
+
+  _l->size--;
+  if(_l->size == 0) _l->head = NULL;
+
+
+  return item;
+}
+size_t ilist_push(ilist *_l, void *_item)
+{
+  iinnerlist *il = iinnerlist_new();
+  il->item = _item;
+
+  /* empty */
+  if(_l->size == 0){
+    _l->head = il;
+    _l->tail = il;
+  }
+  /* not empty */
+  else{
+    (_l->tail)->next = il;
+    il->prev = _l->tail;
+    _l->tail = il;
+  }
+
+  return ++(_l->size);
+}
+
+/* peek */
