@@ -105,7 +105,7 @@ void *ilist_shift(ilist *_l)
   iinnerlist_free(il);
 
   _l->size--;
-
+  _l->next = _l->head;
   if(_l->size == 0) _l->tail = NULL;
 
   return item;
@@ -154,6 +154,7 @@ void *ilist_pop(ilist *_l)
   iinnerlist_free(il);
 
   _l->size--;
+  _l->next = NULL;
   if(_l->size == 0) _l->head = NULL;
 
 
@@ -180,3 +181,43 @@ size_t ilist_push(ilist *_l, void *_item)
 }
 
 /* peek */
+size_t ilist_size(ilist *_l)
+{
+  return _l->size;
+}
+void *ilist_head(ilist *_l)
+{
+  if(_l->size == 0) return NULL;
+  _l->next = (_l->head)->next;
+  return (_l->head)->item;
+}
+void *ilist_tail(ilist *_l)
+{
+  if(_l->size == 0) return NULL;
+  _l->next = NULL;
+  return (_l->tail)->item;
+}
+void *ilist_peek(ilist *_l, int _i)
+{
+  int i;
+  iinnerlist *il;
+
+  if(_i >=  _l->size) return NULL;
+
+  for(il=_l->head, i=0; i<_i; il=il->next, i++);
+  _l->next = il->next;
+
+  return il->item;
+}
+
+/* succ */
+void *ilist_succ(ilist *_l)
+{
+  void *item;
+
+  if(_l->next == NULL) return NULL;
+  item = (_l->next)->item;
+  _l->next = (_l->next)->next;
+
+  return item;
+}

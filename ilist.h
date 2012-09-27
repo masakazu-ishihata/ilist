@@ -28,6 +28,7 @@ typedef struct ILIST
   size_t size;
   iinnerlist *head;
   iinnerlist *tail;
+  iinnerlist *next;
 } ilist;
 
 /* new/free */
@@ -42,5 +43,15 @@ size_t ilist_unshift(ilist *_l, void *_item);
 /* push/pop */
 void *ilist_pop(ilist *_l);
 size_t ilist_push(ilist *_l, void *_item);
+
+/* peek */
+size_t ilist_size(ilist *_l);
+void *ilist_head(ilist *_l);
+void *ilist_tail(ilist *_l);
+void *ilist_peek(ilist *_l, int _i);
+void *ilist_succ(ilist *_l);
+
+/* succ */
+void *ilist_succ(ilist *_l);
 
 #endif /* _INCLUDE_ILIST_H_ */
