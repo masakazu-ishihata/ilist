@@ -27,7 +27,7 @@ ilist _l を free する。
     
     void *ilist_shift(ilist *_l);
 
-ilsit _l の先頭のアイテムを取得する。
+ilsit _l の先頭のアイテムを取得する。   
 取得されたアイテムは _l から取り除かれる。
 
     size_t ilist_unshift(ilist *_l, void *_item);
@@ -37,7 +37,7 @@ ilist _l の先頭にアイテム _item を追加する。
 
 
 
-## pop/push
+### pop/push
 
     void *ilist_pop(ilist *_l);
 
@@ -51,7 +51,7 @@ ilist _l の末尾にアイテム _item を追加する。
 
 
 
-## peek
+### peek
 
     size_t ilist_size(ilist *_l);
 
