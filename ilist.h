@@ -54,4 +54,7 @@ void *ilist_succ(ilist *_l);
 /* succ */
 void *ilist_succ(ilist *_l);
 
+/* etc */
+void ilist_clear(ilist *_l);
+
 #endif /* _INCLUDE_ILIST_H_ */

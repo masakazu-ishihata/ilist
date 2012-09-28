@@ -221,3 +221,9 @@ void *ilist_succ(ilist *_l)
 
   return item;
 }
+
+/* clear */
+void ilist_clear(ilist *_l)
+{
+  while(ilist_pop(_l) != NULL);
+}
