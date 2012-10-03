@@ -227,3 +227,11 @@ void ilist_clear(ilist *_l)
 {
   while(ilist_pop(_l) != NULL);
 }
+void ilist_clear_func(ilist *_l, void (*free_func)(void *))
+{
+  void *p;
+
+  while((p=ilist_pop(_l)) != NULL){
+    free_func(p);
+  }
+}

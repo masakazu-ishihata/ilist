@@ -56,5 +56,6 @@ void *ilist_succ(ilist *_l);
 
 /* etc */
 void ilist_clear(ilist *_l);
+void ilist_clear_func(ilist *_l, void (*free_func)(void *));
 
 #endif /* _INCLUDE_ILIST_H_ */
