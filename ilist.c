@@ -180,6 +180,46 @@ size_t ilist_push(ilist *_l, void *_item)
   return ++(_l->size);
 }
 
+/* remove/insert */
+void *ilist_remove(ilist *_l)
+{
+  void *item;
+  iinnerlist *il;
+
+  /* empty or no target */
+  if(_l->size == 0) return NULL;
+
+  /* @ tail */
+  if(_l->next == NULL) return ilist_pop(_l);
+
+  /* @ head */
+  if(_l->next == (_l->head)->next) return ilist_shift(_l);
+
+  /* @ inner */
+  il = (_l->next)->prev;
+  (_l->next)->prev = il->prev;
+  (il->prev)->next = il->next;
+  item = il->item;
+  il->prev = NULL;
+  il->next = NULL;
+  il->item = NULL;
+  iinnerlist_free(il);
+  _l->size--;
+
+  return item;
+}
+void *ilist_remove_at(ilist *_l, int _i)
+{
+  if(ilist_peek(_l, _i) != NULL)
+    return ilist_remove(_l);
+  else
+    return NULL;
+}
+void ilist_insert(ilist *_l, void *_item)
+{
+}
+void ilist_insert_at(ilist *_l, int _i, void *_item);
+
 /* peek */
 size_t ilist_size(ilist *_l)
 {
@@ -202,7 +242,7 @@ void *ilist_peek(ilist *_l, int _i)
   int i;
   iinnerlist *il;
 
-  if(_i >=  _l->size) return NULL;
+  if(_i >= _l->size) return NULL;
 
   for(il=_l->head, i=0; i<_i; il=il->next, i++);
   _l->next = il->next;

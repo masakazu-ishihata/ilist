@@ -44,17 +44,22 @@ size_t ilist_unshift(ilist *_l, void *_item);
 void *ilist_pop(ilist *_l);
 size_t ilist_push(ilist *_l, void *_item);
 
+/* remove/insert */
+void *ilist_remove(ilist *_l);
+void *ilist_remove_at(ilist *_l, int _i);
+void ilist_insert(ilist *_l, void *_item);
+void ilist_insert_at(ilist *_l, int _i, void *_item);
+
 /* peek */
 size_t ilist_size(ilist *_l);
 void *ilist_head(ilist *_l);
 void *ilist_tail(ilist *_l);
 void *ilist_peek(ilist *_l, int _i);
-void *ilist_succ(ilist *_l);
 
 /* succ */
 void *ilist_succ(ilist *_l);
 
-/* etc */
+/* clear */
 void ilist_clear(ilist *_l);
 void ilist_clear_func(ilist *_l, void (*free_func)(void *));
 

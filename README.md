@@ -44,10 +44,11 @@ ilist _l の先頭にアイテム _item を追加する。
 ilist _l の末尾のアイテムを取得する。   
 取得されたアイテムは _l から取り除かれる。
 
-   size_t ilist_push(ilist *_l, void *_item);
+    size_t ilist_push(ilist *_l, void *_item);
 
 ilist _l の末尾にアイテム _item を追加する。   
 追加後のサイズを返す。
+
 
 
 
@@ -81,6 +82,34 @@ _l からは取り除かれない。
 ilist _l から直前に取得された（見られた）アイテムの次のアイテムを返す。  
 _l からは取り除かれない。   
 以下の使い方の様に ilist 全体を舐めるときに便利。
+
+
+
+### remove/insert
+
+    void *ilist_remove(ilist *_l);
+
+ilist _l の直前に取得された（見られた）アイテムを取得する。
+取得されたアイテムは _l から取り除かれる。
+
+    size_t ilist_insert(ilist *_l);
+
+ilist _l の直前に取得された（見られた）アイテムの後ろにアイテムを追加する。
+追加後のサイズを返す。
+
+
+
+### clear
+
+    void ilist_clear(ilist *_l);
+
+ilist _l の中身をすべて吐き出す。   
+要素は free されない。
+
+    void ilist_clear_func(ilist *_l, void (*free_func)(void));
+
+ilist _l の中身をすべて吐き出す。   
+要素は free_func によって free される。
 
 
 
