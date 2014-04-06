@@ -24,7 +24,7 @@ ilist _l を free する。
 
 
 ### shift/unshift
-    
+
     void *ilist_shift(ilist *_l);
 
 ilsit _l の先頭のアイテムを取得する。   
@@ -89,12 +89,12 @@ _l からは取り除かれない。
 
     void *ilist_remove(ilist *_l);
 
-ilist _l の直前に取得された（見られた）アイテムを取得する。
+ilist _l の直前に取得された（見られた）アイテムを取得する。  
 取得されたアイテムは _l から取り除かれる。
 
     size_t ilist_insert(ilist *_l);
 
-ilist _l の直前に取得された（見られた）アイテムの後ろにアイテムを追加する。
+ilist _l の直前に取得された（見られた）アイテムの後ろにアイテムを追加する。  
 追加後のサイズを返す。
 
 
