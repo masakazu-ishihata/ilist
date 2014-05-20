@@ -21,6 +21,8 @@ ilist _l を free する。
 ilist _l を free する。   
 ただし _l 内のアイテムは free_fucn によって free される。
 
+### accessor
+
 
 
 ### shift/unshift
@@ -68,36 +70,49 @@ _l からは取り除かれない。
 ilist _l の末尾のアイテムを返す。   
 _l からは取り除かれない。
 
-    void *ilist_peek(ilist *_l, int _i);
-
-ilist _l の先頭から _i 番目のアイテムを返す。   
-_l からは取り除かれない。
-
-
-
-### succ
-
     void *ilist_succ(ilist *_l);
 
 ilist _l から直前に取得された（見られた）アイテムの次のアイテムを返す。  
 _l からは取り除かれない。   
 以下の使い方の様に ilist 全体を舐めるときに便利。
 
+    void *ilist_peek(ilist *_l);
+
+ilist _l の直前に取得された（見られた）アイテムの次のアイテムを返す。   
+_l からは取り除かれない。   
+succ と異なり、この参照は次の peek, succ に影響を与えない。
+
+
+### look at
+
+    void *ilist_look_at(ilist *_l, int _i)
+
+ilsit _l の _i 番目のアイテムを返す。   
+_l からは取り除かれない。
 
 
 ### remove/insert
 
     void *ilist_remove(ilist *_l);
 
-ilist _l の直前に取得された（見られた）アイテムを取得する。  
+ilist _l の直前に取得された（見られた）アイテムを取得する。
 取得されたアイテムは _l から取り除かれる。
 
-    size_t ilist_insert(ilist *_l);
+    void *ilist_remove_at(ilist *_l, int _i);
 
-ilist _l の直前に取得された（見られた）アイテムの後ろにアイテムを追加する。  
+ilist _l の _i 番目のアイテムを取得する。
+取得されたアイテムは _l から取り除かれる。
+
+
+    size_t ilist_insert(ilist *_l,, void *_item);
+
+ilist _l の直前に取得された（見られた）アイテムの後ろにアイテム _item を追加する。  
 追加後のサイズを返す。
 
+    size_t ilist_insert_at(ilist *_l, void *_item, int _i);
 
+ilist _l の _i 番目のアイテムの後ろにアイテム _item を追加する。  
+追加後のサイズを返す。
 
 ### clear
 
@@ -111,6 +126,11 @@ ilist _l の中身をすべて吐き出す。
 ilist _l の中身をすべて吐き出す。   
 要素は free_func によって free される。
 
+### sort
+
+    void ilist_sort(ilist *_l, int (*comp)(void *, void *));
+
+ilist _l を comp を元にソートする。
 
 
 ## 使い方
