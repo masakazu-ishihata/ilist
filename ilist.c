@@ -3,6 +3,9 @@
 /*----------------------------------------------------------------------------*/
 /* inner list */
 /*----------------------------------------------------------------------------*/
+/*------------------------------------*/
+/* new */
+/*------------------------------------*/
 iinnerlist *iinnerlist_new(void)
 {
   iinnerlist *il;
@@ -17,6 +20,9 @@ iinnerlist *iinnerlist_new(void)
 
   return il;
 }
+/*------------------------------------*/
+/* free */
+/*------------------------------------*/
 void iinnerlist_free(iinnerlist *_l)
 {
   if(_l != NULL){
@@ -31,7 +37,9 @@ void iinnerlist_free(iinnerlist *_l)
 /*----------------------------------------------------------------------------*/
 /* list */
 /*----------------------------------------------------------------------------*/
+/*------------------------------------*/
 /* new */
+/*------------------------------------*/
 ilist *ilist_new(void)
 {
   ilist *l;
@@ -46,16 +54,14 @@ ilist *ilist_new(void)
 
   return l;
 }
+/*------------------------------------*/
 /* free */
-void ilist_free(ilist *_l)
+/*------------------------------------*/
+void ilist_free(void *_p)
 {
-  if(_l != NULL){
-    if(_l->size != 0){
-      printf("ilist_free: free error\n");
-      exit(EXIT_FAILURE);
-    }
-    free(_l);
-  }
+  ilist *_l = (ilist *)_p;
+  if(_l != NULL)
+    ilist_free_func(_l, NULL);
 }
 void ilist_free_func(ilist *_l, void (*free_func)(void *))
 {
@@ -68,7 +74,7 @@ void ilist_free_func(ilist *_l, void (*free_func)(void *))
       _l->head = il->next;
 
       /* free innner list */
-      free_func(il->item);
+      if(free_func != NULL) free_func(il->item);
       il->item = NULL;
       il->prev = NULL;
       il->next = NULL;
@@ -78,14 +84,20 @@ void ilist_free_func(ilist *_l, void (*free_func)(void *))
     _l->size = 0;
     _l->head = NULL;
     _l->tail = NULL;
+    _l->next = NULL;
     free(_l);
   }
 }
+/*------------------------------------*/
 /* clear */
+/*------------------------------------*/
 void ilist_clear(ilist *_l)
 {
   while(ilist_pop(_l) != NULL);
 }
+/*------------------------------------*/
+/* clear with free */
+/*------------------------------------*/
 void ilist_clear_func(ilist *_l, void (*free_func)(void *))
 {
   void *p;
@@ -97,22 +109,34 @@ void ilist_clear_func(ilist *_l, void (*free_func)(void *))
 /*----------------------------------------------------------------------------*/
 /* accessor */
 /*----------------------------------------------------------------------------*/
+/*------------------------------------*/
+/* get # items in _l */
+/*------------------------------------*/
 size_t ilist_size(ilist *_l)
 {
   return _l->size;
 }
+/*------------------------------------*/
+/* get head of _l */
+/*------------------------------------*/
 void *ilist_head(ilist *_l)
 {
   if(_l->size == 0) return NULL;
   _l->next = (_l->head)->next;
   return (_l->head)->item;
 }
+/*------------------------------------*/
+/* get tail of _l */
+/*------------------------------------*/
 void *ilist_tail(ilist *_l)
 {
   if(_l->size == 0) return NULL;
   _l->next = NULL;
   return (_l->tail)->item;
 }
+/*------------------------------------*/
+/* get successor of the previous access */
+/*------------------------------------*/
 void *ilist_succ(ilist *_l)
 {
   void *item;
@@ -123,6 +147,9 @@ void *ilist_succ(ilist *_l)
 
   return item;
 }
+/*------------------------------------*/
+/* get the next item of the previous access */
+/*------------------------------------*/
 void *ilist_peek(ilist *_l)
 {
   if(_l->next == NULL)
@@ -130,15 +157,13 @@ void *ilist_peek(ilist *_l)
   else
     return (_l->next)->item;
 }
-
-/*----------------------------------------------------------------------------*/
-/* look */
-/*----------------------------------------------------------------------------*/
-void *ilist_look_at(ilist *_l, int _i)
+/*------------------------------------*/
+/* get the _i-th item in _l */
+/*------------------------------------*/
+void *ilist_look_at(ilist *_l, size_t _i)
 {
-  int i;
+  size_t i;
   void *item;
-
   for(item=ilist_head(_l), i=0; item!=NULL && i<_i; item=ilist_succ(_l), i++);
   return item;
 }
@@ -146,6 +171,9 @@ void *ilist_look_at(ilist *_l, int _i)
 /*----------------------------------------------------------------------------*/
 /* shift, unshift */
 /*----------------------------------------------------------------------------*/
+/*------------------------------------*/
+/* shift : remove the head item */
+/*------------------------------------*/
 void *ilist_shift(ilist *_l)
 {
   void *item;
@@ -179,6 +207,9 @@ void *ilist_shift(ilist *_l)
 
   return item;
 }
+/*------------------------------------*/
+/* unshift : add _time to the head of _l */
+/*------------------------------------*/
 size_t ilist_unshift(ilist *_l, void *_item)
 {
   iinnerlist *il = iinnerlist_new();
@@ -203,6 +234,9 @@ size_t ilist_unshift(ilist *_l, void *_item)
 /*----------------------------------------------------------------------------*/
 /* push, pop */
 /*----------------------------------------------------------------------------*/
+/*------------------------------------*/
+/* pop : remove the tail item */
+/*------------------------------------*/
 void *ilist_pop(ilist *_l)
 {
   void *item;
@@ -231,6 +265,9 @@ void *ilist_pop(ilist *_l)
 
   return item;
 }
+/*------------------------------------*/
+/* push : add _item to the tail of _l */
+/*------------------------------------*/
 size_t ilist_push(ilist *_l, void *_item)
 {
   iinnerlist *il = iinnerlist_new();
@@ -256,6 +293,9 @@ size_t ilist_push(ilist *_l, void *_item)
 /*----------------------------------------------------------------------------*/
 /* remove, insert */
 /*----------------------------------------------------------------------------*/
+/*------------------------------------*/
+/* remove : remove the previous item */
+/*------------------------------------*/
 void *ilist_remove(ilist *_l)
 {
   void *item;
@@ -293,6 +333,9 @@ void *ilist_remove(ilist *_l)
 
   return item;
 }
+/*------------------------------------*/
+/* insert : add _item to the previous position */
+/*------------------------------------*/
 size_t ilist_insert(ilist *_l, void *_item)
 {
   iinnerlist *il;
@@ -316,14 +359,14 @@ size_t ilist_insert(ilist *_l, void *_item)
 
   return ++_l->size;
 }
-void *ilist_remove_at(ilist *_l, int _i)
+void *ilist_remove_at(ilist *_l, size_t _i)
 {
   if(ilist_look_at(_l, _i) != NULL)
     return ilist_remove(_l);
   else
     return NULL;
 }
-size_t ilist_insert_at(ilist *_l, void *_item, int _i)
+size_t ilist_insert_at(ilist *_l, void *_item, size_t _i)
 {
   if(ilist_look_at(_l, _i) != NULL)
     return ilist_insert(_l, _item);
@@ -332,8 +375,48 @@ size_t ilist_insert_at(ilist *_l, void *_item, int _i)
 }
 
 /*----------------------------------------------------------------------------*/
+/* binomial operators */
+/*----------------------------------------------------------------------------*/
+/*------------------------------------*/
+/* concatenate _b to _a : _b becomes empty */
+/*------------------------------------*/
+void ilist_connect(ilist *_a, ilist *_b)
+{
+  iinnerlist *ila, *ilb;
+
+  /* a is empty */
+  if(_a->size == 0){
+    _a->size = _b->size;
+    _a->head = _b->head;
+    _a->tail = _b->tail;
+    _a->next = NULL;
+  }
+
+  /* a & b are not empty */
+  else if(_a->size > 0 && _b->size > 0){
+    ila = _a->tail;
+    ilb = _b->head;
+
+    ila->next = ilb; /* [a->tail] => [b->head] */
+    ilb->prev = ila; /* [a->tail] <= [b->head] */
+
+    _a->size += _b->size;
+    _a->tail = _b->tail;
+  }
+
+  /* clear b */
+  _b->size = 0;
+  _b->head = NULL;
+  _b->tail = NULL;
+  _b->next = NULL;
+}
+
+/*----------------------------------------------------------------------------*/
 /* sort */
 /*----------------------------------------------------------------------------*/
+/*------------------------------------*/
+/* sort _l by comparison function comp */
+/*------------------------------------*/
 int ilist_sort(ilist *_l, int (*comp)(void *, void *))
 {
   ilist *a, *b;
@@ -355,9 +438,12 @@ int ilist_sort(ilist *_l, int (*comp)(void *, void *))
 
   return 1;
 }
-ilist *ilist_cut_at(ilist *_l, int _i)
+/*------------------------------------*/
+/* divide _l into two list from _i */
+/*------------------------------------*/
+ilist *ilist_cut_at(ilist *_l, size_t _i)
 {
-  int i;
+  size_t i;
   iinnerlist *il;
   ilist *a;
   a = ilist_new();
@@ -388,37 +474,9 @@ ilist *ilist_cut_at(ilist *_l, int _i)
 
   return a;
 }
-void ilist_connect(ilist *_a, ilist *_b)
-{
-  iinnerlist *ila, *ilb;
-
-  /* a is empty */
-  if(_a->size == 0){
-    _a->size = _b->size;
-    _a->head = _b->head;
-    _a->tail = _b->tail;
-    _a->next = NULL;
-  }
-
-  /* a & b are not empty */
-  else if(_a->size > 0 && _b->size > 0){
-    ila = _a->tail;
-    ilb = _b->head;
-
-    ila->next = ilb;
-    ilb->prev = ila;
-
-    _a->size += _b->size;
-    _a->tail = _b->tail;
-  }
-
-  /* clear b */
-  _b->size = 0;
-  _b->head = NULL;
-  _b->tail = NULL;
-  _b->next = NULL;
-}
-
+/*------------------------------------*/
+/* merge two list with comp order */
+/*------------------------------------*/
 void ilist_merge(ilist *_a, ilist *_b, int (*comp)(void *, void *))
 {
   ilist *l;
@@ -440,4 +498,66 @@ void ilist_merge(ilist *_a, ilist *_b, int (*comp)(void *, void *))
   /* l -> _a */
   ilist_connect(_a, l);
   ilist_free(l);
+}
+
+/*----------------------------------------------------------------------------*/
+/* file */
+/*----------------------------------------------------------------------------*/
+/*------------------------------------*/
+/* export _l consisting of strings to _fp */
+/*------------------------------------*/
+void ilist_export(FILE *_fp, ilist *_l)
+{
+  void *p;
+  for(p=ilist_head(_l); p!=NULL; p=ilist_succ(_l))
+    fprintf(_fp, "%s\n", (char *)p);
+}
+/*------------------------------------*/
+/* import _file as a list of line */
+/*------------------------------------*/
+ilist *ilist_import(const char *_file)
+{
+  FILE *fp = fopen(_file, "r");
+  char buf[1024];
+
+  /* N = # lines */
+  int N = 0;
+  while(fgets(buf, 1024, fp) != NULL)
+    if(strchr(buf, '\n') != NULL) N++;
+
+  /* L[i] = length of i-th line */
+  int i;
+  int *L = (int *)calloc(N, sizeof(int));
+  rewind(fp);
+  i = 0;
+  for(i=0; i<N; i++){
+    do{
+      if(fgets(buf, 1024, fp) == NULL) break;
+      L[i] += strlen(buf);
+      if(strchr(buf, '\n') != NULL) break;
+    }while(1);
+  }
+
+  /* load lines */
+  ilist *l = ilist_new();
+  rewind(fp);
+  char *line, *p;
+  for(i=0; i<N; i++){
+    /* read line */
+    line = (char *)calloc(L[i] + 1, sizeof(char));
+    if(fgets(line, L[i]+1, fp) == NULL){
+      perror("error : ilist_import()");
+      exit(1);
+    }
+
+    /* remove '\n' */
+    if((p = strchr(line, '\n')) != NULL) *p = '\0';
+
+    /* add to list */
+    ilist_push(l, line);
+  }
+  fclose(fp);
+  free(L);
+
+  return l;
 }

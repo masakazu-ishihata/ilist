@@ -23,7 +23,35 @@ ilist _l を free する。
 
 ### accessor
 
+    size_t ilist_size(ilist *_l);
 
+ilist _l のサイズ数を得る。
+
+    void  *ilist_head(ilist *_l);
+
+ilist _l の先頭のアイテムを得る。  
+_l からアイテムは取り除かれない。
+
+    void  *ilist_tail(ilist *_l);
+
+ilist _l の末尾のアイテムを得る。
+_l からアイテムは取り除かれない。
+
+    void  *ilist_succ(ilist *_l);
+
+ilist _l の直前の参照の次のアイテムを得る。
+_l からアイテムは取り除かれない。
+
+    void  *ilist_peek(ilist *_l);
+
+ilist _l の直前の参照の次のアイテムを見る。  
+_l からアイテムは取り除かれない。  
+この操作は参照として扱わない。
+
+    void  *ilist_look_at(ilist *_l, size_t _i);
+
+ilist _l の _i 番目のアイテムを得る。  
+_l からアイテムは取り除かれない。
 
 ### shift/unshift
 
@@ -37,8 +65,6 @@ ilsit _l の先頭のアイテムを取得する。
 ilist _l の先頭にアイテム _item を追加する。   
 追加後のサイズを返す。
 
-
-
 ### pop/push
 
     void *ilist_pop(ilist *_l);
@@ -50,45 +76,6 @@ ilist _l の末尾のアイテムを取得する。
 
 ilist _l の末尾にアイテム _item を追加する。   
 追加後のサイズを返す。
-
-
-
-
-### peek
-
-    size_t ilist_size(ilist *_l);
-
-ilist _l のサイズ（アイテム数）を返す。
-
-    void *ilist_head(ilist *_l);
-
-ilist _l の先頭のアイテムを返す。   
-_l からは取り除かれない。
-
-    void *ilist_tail(ilist *_l);
-
-ilist _l の末尾のアイテムを返す。   
-_l からは取り除かれない。
-
-    void *ilist_succ(ilist *_l);
-
-ilist _l から直前に取得された（見られた）アイテムの次のアイテムを返す。  
-_l からは取り除かれない。   
-以下の使い方の様に ilist 全体を舐めるときに便利。
-
-    void *ilist_peek(ilist *_l);
-
-ilist _l の直前に取得された（見られた）アイテムの次のアイテムを返す。   
-_l からは取り除かれない。   
-succ と異なり、この参照は次の peek, succ に影響を与えない。
-
-
-### look at
-
-    void *ilist_look_at(ilist *_l, int _i)
-
-ilsit _l の _i 番目のアイテムを返す。   
-_l からは取り除かれない。
 
 
 ### remove/insert
@@ -133,31 +120,14 @@ ilist _l の中身をすべて吐き出す。
 ilist _l を comp を元にソートする。
 
 
-## 使い方
+### import / export
 
-以下みたいな感じで使うとよい気がする。
+    void ilist_export(FILE *_fp, ilist *_l);
 
-    ilist *l = ilist_new();
-    int i, *p;
+ilist _l の内容を _fp に書き出す。  
+ただしアイテムは char * 型とする。
 
-    /* unshift */
-    for(i=0; i<10; i++){
-      p = (int *)malloc(sizeof(int));
-      *p = i;
-      ilist_unshift(l, p);
-    }
+    ilist *ilist_import(const char *_file);
 
-    /* push */
-    for(i=0; i<10; i++){
-      p = (int *)malloc(sizeof(int));
-      *p = i;
-      ilist_push(l, p);
-    }
-
-    /* succ */
-    for(p=ilist_head(l); p != NULL; p=ilist_succ(l)){
-      printf("%d\n", *p);
-    }
-
-    /* free */
-    ilist_free_func(l, free);
+_file の各行を ilist 形式で読み込む。  
+各行が１つのアイテムとして扱われる。
