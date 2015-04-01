@@ -131,3 +131,15 @@ ilist _l の内容を _fp に書き出す。
 
 _file の各行を ilist 形式で読み込む。  
 各行が１つのアイテムとして扱われる。
+
+### macro
+
+    ILIST_FOR(v, l)
+    // for(v=ilist_head(l); v!=NULL; v=ilist_succ(l))
+
+    ILIST_WHILE(v, l)
+    // while((v=ilist_shift(l)) != NULL)
+
+よく使う for 文と while 文をマクロ化したもの。
+
+

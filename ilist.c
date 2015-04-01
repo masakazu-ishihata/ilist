@@ -1,6 +1,22 @@
 #include "ilist.h"
 
 /*----------------------------------------------------------------------------*/
+/* util */
+/*----------------------------------------------------------------------------*/
+int *int_new(int _v)
+{
+  int *p = (int *)malloc(sizeof(int));
+  *p = _v;
+  return p;
+}
+double *double_new(double _v)
+{
+  double *p = (double *)malloc(sizeof(double));
+  *p = _v;
+  return p;
+}
+
+/*----------------------------------------------------------------------------*/
 /* inner list */
 /*----------------------------------------------------------------------------*/
 /*------------------------------------*/
@@ -11,7 +27,7 @@ iinnerlist *iinnerlist_new(void)
   iinnerlist *il;
 
   if( (il = (iinnerlist *)malloc(sizeof(iinnerlist))) == NULL){
-    perror("iinnnerlist_new");
+    printf("error : malloc failed @ iinnerlist_new\n");
     exit(EXIT_FAILURE);
   }
   il->item = NULL;
@@ -27,7 +43,7 @@ void iinnerlist_free(iinnerlist *_l)
 {
   if(_l != NULL){
     if(_l->item != NULL || _l->prev != NULL || _l->next != NULL){
-      printf("innerlist_free: free error\n");
+      printf("error : invalid poiter @ iinnerlist_free\n");
       exit(EXIT_FAILURE);
     }
     free(_l);
@@ -45,7 +61,7 @@ ilist *ilist_new(void)
   ilist *l;
 
   if( (l = (ilist *)malloc(sizeof(ilist))) == NULL){
-    perror("ilist_new");
+    printf("error : malloc failed @ ilist_new\n");
     exit(EXIT_FAILURE);
   }
   l->size = 0;
@@ -518,6 +534,10 @@ void ilist_export(FILE *_fp, ilist *_l)
 ilist *ilist_import(const char *_file)
 {
   FILE *fp = fopen(_file, "r");
+  if(fp == NULL){
+    printf("error : \"%s\" does not exist @ ilist_import\n", _file);
+    exit(1);
+  }
   char buf[1024];
 
   /* N = # lines */
@@ -546,7 +566,7 @@ ilist *ilist_import(const char *_file)
     /* read line */
     line = (char *)calloc(L[i] + 1, sizeof(char));
     if(fgets(line, L[i]+1, fp) == NULL){
-      perror("error : ilist_import()");
+      perror("error : invalid memory size @ ilist_import");
       exit(1);
     }
 

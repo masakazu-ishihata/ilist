@@ -1,7 +1,7 @@
 # Makefile
 TAR = test
 CC = gcc -O6 -Wall
-L = -lm -listring
+L = -lm
 OBJS = main.o ilist.o
 SHAD = -fPIC -shared
 LIB = libilist.so

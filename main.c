@@ -33,13 +33,11 @@ int main(void)
 
   /* before */
   printf("list a = ");
-  for(p=ilist_head(a); p!=NULL; p=ilist_succ(a))
-    printf("%3d", *p);
+  ILIST_FOR(p, a) printf("%3d", *p);
   printf("\n");
 
   printf("list b = ");
-  for(p=ilist_head(b); p!=NULL; p=ilist_succ(b))
-    printf("%3d", *p);
+  ILIST_FOR(p, b) printf("%3d", *p);
   printf("\n");
 
   /*------------------------------------*/
@@ -50,13 +48,11 @@ int main(void)
 
   /* after */
   printf("list a = ");
-  for(p=ilist_head(a); p!=NULL; p=ilist_succ(a))
-    printf("%3d", *p);
+  ILIST_FOR(p, a) printf("%3d", *p);
   printf("\n");
 
   printf("list b = ");
-  for(p=ilist_head(b); p!=NULL; p=ilist_succ(b))
-    printf("%3d", *p);
+  ILIST_FOR(p, b) printf("%3d", *p);
   printf("\n");
 
   /*------------------------------------*/
@@ -64,14 +60,32 @@ int main(void)
   /*------------------------------------*/
   printf("<<<< sort a >>>>\n");
   ilist_sort(a, int_comp);
+
   printf("list a = ");
-  for(p=ilist_head(a); p!=NULL; p=ilist_succ(a))
-    printf("%3d", *p);
+  ILIST_FOR(p, a) printf("%3d", *p);
   printf("\n");
+
   ilist_sort(a, int_comp_rev);
+
   printf("list a = ");
-  for(p=ilist_head(a); p!=NULL; p=ilist_succ(a))
-    printf("%3d", *p);
+  ILIST_FOR(p, a) printf("%3d", *p);
+  printf("\n");
+
+  /*------------------------------------*/
+  /* remove */
+  /*------------------------------------*/
+  printf("<<<< remove even numbers from a >>>>\n");
+
+  printf("list a = ");
+  ILIST_FOR(p, a) printf("%3d", *p);
+  printf("\n");
+
+  ILIST_FOR(p, a)
+    if(*p % 2 == 0)
+      free( ilist_remove(a) );
+
+  printf("list a = ");
+  ILIST_FOR(p, a) printf("%3d", *p);
   printf("\n");
 
   /*------------------------------------*/
@@ -81,14 +95,6 @@ int main(void)
   ilist_free_func(a, free);
   printf("<<<< free b >>>>\n");
   ilist_free_func(b, free);
-
-  /*------------------------------------*/
-  /* import / export */
-  /*------------------------------------*/
-  printf("<<<< import / export >>>>\n");
-  a = ilist_import("test.txt");
-  ilist_export(stdout, a);
-  ilist_free_func(a, free);
 
   return 0;
 };

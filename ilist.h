@@ -6,7 +6,19 @@
 /*----------------------------------------------------------------------------*/
 #include <stdio.h>
 #include <stdlib.h>
-#include <istring.h>
+#include <string.h>
+
+/*----------------------------------------------------------------------------*/
+/* macro */
+/*----------------------------------------------------------------------------*/
+#define ILIST_FOR(v, l)   for(v=ilist_head(l); v!=NULL; v=ilist_succ(l))
+#define ILIST_WHILE(v, l) while((v=ilist_shift(l)) != NULL)
+
+/*----------------------------------------------------------------------------*/
+/* util */
+/*----------------------------------------------------------------------------*/
+int *int_new(int _v);
+double *double_new(double _v);
 
 /*----------------------------------------------------------------------------*/
 /* inner list */
@@ -65,12 +77,12 @@ size_t ilist_insert_at(ilist *_l, void *_item, size_t _i);
 void ilist_connect(ilist *_a, ilist *_b);
 
 /* sort */
-int ilist_sort(ilist *_l, int (*comp)(void *, void *));
+int    ilist_sort(ilist *_l, int (*comp)(void *, void *));
 ilist *ilist_cut_at(ilist *_l, size_t _i);
-void ilist_merge(ilist *_a, ilist *_b, int (*comp)(void *, void *));
+void   ilist_merge(ilist *_a, ilist *_b, int (*comp)(void *, void *));
 
 /* file */
-void ilist_export(FILE *_fp, ilist *_l);
+void   ilist_export(FILE *_fp, ilist *_l);
 ilist *ilist_import(const char *_file);
 
 #endif /* _INCLUDE_ILIST_H_ */
